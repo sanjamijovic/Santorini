@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="I1d-XN-1Mg">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Game View Controller-->
+        <scene sceneID="KfK-kl-1na">
+            <objects>
+                <viewController id="yfk-2v-Y2d" customClass="GameViewController" customModule="Santorini" customModuleProvider="target" sceneMemberID="viewController">
+                    <skView key="view" contentMode="scaleToFill" sceneName="GameScene.sks" id="rhn-gR-M6L">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </skView>
+                    <connections>
+                        <outlet property="gameView" destination="rhn-gR-M6L" id="vIV-D4-YFy"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BFr-0W-kKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2671" y="473"/>
+        </scene>
+        <!--Choice View Controller-->
+        <scene sceneID="5gg-ir-uDx">
+            <objects>
+                <viewController id="S1B-Rd-qnu" customClass="ChoiceViewController" customModule="Santorini" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="b8s-gl-efy">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ly7-at-cbL">
+                                <rect key="frame" x="16" y="597" width="343" height="30"/>
+                                <color key="backgroundColor" red="0.50196078431372548" green="0.80784313725490198" blue="0.90980392156862744" alpha="0.52000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Start!"/>
+                                <connections>
+                                    <segue destination="yfk-2v-Y2d" kind="show" id="bS1-fm-GQW"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qrM-ti-7Za">
+                                <rect key="frame" x="16" y="537" width="343" height="30"/>
+                                <color key="backgroundColor" red="0.50196081399917603" green="0.80882358551025391" blue="0.90980398654937744" alpha="0.52046408582089554" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Read initial positions"/>
+                            </button>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h35-oa-rim">
+                                <rect key="frame" x="16" y="153" width="343" height="216"/>
+                            </pickerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="UPP-o4-03h" firstAttribute="trailing" secondItem="qrM-ti-7Za" secondAttribute="trailing" constant="16" id="06H-29-wQK"/>
+                            <constraint firstItem="Ly7-at-cbL" firstAttribute="leading" secondItem="UPP-o4-03h" secondAttribute="leading" constant="16" id="1QY-UI-v6W"/>
+                            <constraint firstItem="UPP-o4-03h" firstAttribute="bottom" secondItem="Ly7-at-cbL" secondAttribute="bottom" constant="40" id="Vyh-MK-odE"/>
+                            <constraint firstItem="Ly7-at-cbL" firstAttribute="top" secondItem="qrM-ti-7Za" secondAttribute="bottom" constant="30" id="XwK-ee-Mrj"/>
+                            <constraint firstItem="h35-oa-rim" firstAttribute="leading" secondItem="UPP-o4-03h" secondAttribute="leading" constant="16" id="a2N-o5-s3k"/>
+                            <constraint firstItem="qrM-ti-7Za" firstAttribute="top" secondItem="h35-oa-rim" secondAttribute="bottom" constant="168" id="bfo-0D-IAL"/>
+                            <constraint firstItem="UPP-o4-03h" firstAttribute="trailing" secondItem="h35-oa-rim" secondAttribute="trailing" constant="16" id="fBg-16-vfz"/>
+                            <constraint firstItem="qrM-ti-7Za" firstAttribute="leading" secondItem="UPP-o4-03h" secondAttribute="leading" constant="16" id="gpw-kV-EOY"/>
+                            <constraint firstItem="UPP-o4-03h" firstAttribute="trailing" secondItem="Ly7-at-cbL" secondAttribute="trailing" constant="16" id="xAA-Ef-4Li"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="UPP-o4-03h"/>
+                    </view>
+                    <connections>
+                        <outlet property="picker" destination="h35-oa-rim" id="hy4-fY-0cE"/>
+                        <outlet property="readFileButton" destination="qrM-ti-7Za" id="Mya-Fi-moA"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DkU-97-DKo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1576.8" y="482.60869565217394"/>
+        </scene>
+        <!--Inital View Controller-->
+        <scene sceneID="axp-Bs-k63">
+            <objects>
+                <viewController id="I1d-XN-1Mg" customClass="InitalViewController" customModule="Santorini" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gUa-pT-AcB">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="js9-MF-ews">
+                                <rect key="frame" x="16" y="90" width="343" height="20"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="Swipe left to start!">
+                                        <attributes>
+                                            <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                            <font key="NSFont" metaFont="system" size="17"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <gestureRecognizers/>
+                        <constraints>
+                            <constraint firstItem="TJa-n7-CmD" firstAttribute="trailing" secondItem="js9-MF-ews" secondAttribute="trailing" constant="16" id="3ys-Bv-7mD"/>
+                            <constraint firstItem="js9-MF-ews" firstAttribute="top" secondItem="TJa-n7-CmD" secondAttribute="top" constant="70" id="HiJ-8p-8ZZ"/>
+                            <constraint firstItem="js9-MF-ews" firstAttribute="leading" secondItem="TJa-n7-CmD" secondAttribute="leading" constant="16" id="nx5-ca-NEz"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="TJa-n7-CmD"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="kLt-pF-S3Y" appends="YES" id="9nc-Hx-0Wz"/>
+                        </connections>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z3R-MX-Akz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="left" id="kLt-pF-S3Y">
+                    <connections>
+                        <segue destination="S1B-Rd-qnu" kind="show" id="KUz-Py-jjG"/>
+                    </connections>
+                </swipeGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="716" y="534.78260869565224"/>
+        </scene>
+    </scenes>
+</document>
