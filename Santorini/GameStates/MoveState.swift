@@ -39,8 +39,6 @@ class MoveState:GameState {
         var possibleMove: Bool = newFieldState.canPutFigure()
         
         if(possibleMove) {
-            print("figureRow ", figureRow, " row ", row, " figureColumn ", figureCollumn, " collumn ", collumn)
-            print(" new block num ", newFieldState.numOfBlocks(), " old block state ", previousFieldState.numOfBlocks())
             if(abs(figureRow - row) > 1 || abs(figureCollumn - collumn) > 1 || newFieldState.numOfBlocks() - previousFieldState.numOfBlocks() > 1) {
                 possibleMove = false
             }

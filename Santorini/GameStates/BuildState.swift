@@ -49,13 +49,7 @@ class BuildState: GameState {
             context.addBlock(row:row, collumn:collumn)
             let player = 1 - playerId
             context.setPlayer(playerId: player)
-            if(context.level != GameViewController.GameLevel.low) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
-                    context.setGameState(newState: ChooseFigureState(playerId:player))
-                })
-            } else {
             context.setGameState(newState: ChooseFigureState(playerId:player))
-            }
         }
     }
     

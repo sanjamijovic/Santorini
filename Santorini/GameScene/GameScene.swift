@@ -162,7 +162,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if(type == GameViewController.GameType.AIGame && !iteration!) {
                 print(board.toString())
                 grid!.present(board: board)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
                     self.gameOver(winnerId: self.board.getWinner()!)
                 })
             } else {
@@ -170,7 +170,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         } else if((type == GameViewController.GameType.onePlayer && board.getCurrentPlayer() == 1) ||
             type == GameViewController.GameType.AIGame) {
-            newState.action(context: self)
+            if(level != GameViewController.GameLevel.low && (type != GameViewController.GameType.AIGame || type == GameViewController.GameType.AIGame && iteration!)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
+                    newState.action(context: self)
+                })
+            } else {
+                newState.action(context: self)
+            }
         }
     }
     
@@ -280,9 +286,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return (bestScore, bestMove, bestBuild)
     }
     
-    func minimaxAlphaBeta(board:Board, playerId:Int, maxDepth:Int, currentDepth:Int, figureId:Int, move:Field? = nil, build:Field? = nil, alpha:Int = Int.min, beta:Int = Int.max) -> (bestScore:Int, bestMove:Field, bestBuild:Field) {
+    func minimaxAlphaBeta(board:Board, playerId:Int, maxDepth:Int, currentDepth:Int, figureId:Int, previousMove:Field? = nil, previousBuild:Field? = nil, alpha:Int = Int.min, beta:Int = Int.max) -> (bestScore:Int, bestMove:Field, bestBuild:Field) {
         if(board.gameOver() || currentDepth == maxDepth) {
-            return (bestScore: board.evaluate(move: move!, build: build!, playerId: playerId), bestMove: move!, bestBuild:build!)
+            return (bestScore: board.evaluate(move: previousMove!, build: previousBuild!, playerId: playerId), bestMove: previousMove!, bestBuild:previousBuild!)
         }
         var bestMove:Field = Field()
         var bestBuild:Field = Field()
@@ -295,16 +301,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let newBoard = Board(board: board) // make copy
             var currentScore:Int
             newBoard.moveFigure(figureId: figureId, position: move)
+            let moveToPass = newBoard.getFieldState(row: move.getRow(), collumn: move.getCollumn())
             
             for build in newBoard.possibleMovesForCurrentPlayer(figureId: figureId, build: true) {
                 let newNewBoard = Board(board: newBoard)
                 newNewBoard.addBlock(row: build.getRow(), collumn: build.getCollumn())
                 newNewBoard.changeCurrentPlayer()
+                let buildToPass = newNewBoard.getFieldState(row: build.getRow(), collumn: build.getCollumn())
                 
-                let (score1, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 0, move: move, build: build,
-                                             alpha: alphaToPass, beta:betaToPass)
-                let (score2, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 1, move: move, build: build,
-                                             alpha: alphaToPass, beta:betaToPass)
+                let (score1, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 0, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass)
+                let (score2, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 1, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass)
                 
                 if(board.getCurrentPlayer() == playerId) {
                     currentScore = max(score1, score2)

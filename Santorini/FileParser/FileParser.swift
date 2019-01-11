@@ -69,7 +69,7 @@ class FileParser {
         return board
     }
     
-    func parseToken(token:String) -> (row:Int, collumn:Int) {
+    private func parseToken(token:String) -> (row:Int, collumn:Int) {
         let rowCharacter:Character = token[token.startIndex]
         let collumnCharacter:Character = token[token.index(after: token.startIndex)]
         
@@ -84,7 +84,7 @@ class FileParser {
         return(row, collumn)
     }
     
-    func makeToken(row:Int, collumn:Int) -> String{
+    private func makeToken(row:Int, collumn:Int) -> String{
         let startingValue = Int(("A" as UnicodeScalar).value)
         var ret = String(Character(UnicodeScalar(startingValue + row)!))
         ret.append("\(collumn + 1)")

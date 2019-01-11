@@ -21,7 +21,7 @@ class ChoiceViewController: UIViewController, UIPickerViewDelegate, UIPickerView
         ["Iterative", "All"]
     ]
     
-    var type: String = "Player vs. AI"
+    var type: String = "Two players"
     var level: String = "Low"
     var iteration:String = "Iterative"
     
