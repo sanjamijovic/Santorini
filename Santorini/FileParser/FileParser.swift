@@ -22,7 +22,6 @@ class FileParser {
             print(Bundle.main)
             
             if let  filePath = Bundle.main.path(forResource: fileName, ofType: "txt") {
-//                let text = try String(contentsOfFile: filePath, encoding: UTF8StringEncoding, error: nil)!
                 let text = try String(contentsOfFile: filePath, encoding: String.Encoding.utf8)
                 let lines = text.components(separatedBy: "\n")
                 

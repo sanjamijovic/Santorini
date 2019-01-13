@@ -22,8 +22,6 @@ class BuildState: GameState {
     }
     
     override func action(context: GameScene) {
-//        let figureId = context.getBoard().getFigureId(playerId: playerId, row: figureRow, collumn: figureCollumn)
-//        let (_, bestMove) = context.minimax(board: context.getBoard(), playerId: playerId, maxDepth: 5, currentDepth: 0, figureId: figureId, build: true)
         if(context.toDelay()) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                 self.action(row: self.buildRow!, collumn: self.buildCollumn!, context: context)
@@ -44,7 +42,7 @@ class BuildState: GameState {
         }
         
         if(!possibleAction) {
-            print("Impossible action ", self.figureRow, " ", self.figureCollumn, " pokusao ", row, " ", collumn)
+            print("Impossible build ", self.figureRow, " ", self.figureCollumn, " pokusao ", row, " ", collumn)
         } else {
             context.addBlock(row:row, collumn:collumn)
             let player = 1 - playerId

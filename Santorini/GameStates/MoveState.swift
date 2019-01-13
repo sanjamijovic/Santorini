@@ -25,7 +25,7 @@ class MoveState:GameState {
     
     override func action(context: GameScene) {
         if(context.toDelay()) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                 self.action(row: self.moveRow!, collumn: self.moveCollumn!, context: context)
             })
         } else {

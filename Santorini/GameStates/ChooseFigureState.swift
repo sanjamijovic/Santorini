@@ -22,11 +22,15 @@ class ChooseFigureState: GameState {
         default:
             maxDepth = 4
         }
-        let (bestScore1, bestMove1, bestBuild1) = context.minimaxAlphaBeta(board: context.getBoard(), playerId: playerId, maxDepth: maxDepth, currentDepth: 0, figureId: 0)
-        let (bestScore2, bestMove2, bestBuild2) = context.minimaxAlphaBeta(board: context.getBoard(), playerId: playerId, maxDepth: maxDepth, currentDepth: 0, figureId: 1)
+        let optimized = (playerId == 1)
+        let (bestScore1, bestMove1, bestBuild1) = context.minimax(board: context.getBoard(), playerId: playerId, maxDepth: maxDepth, currentDepth: 0, figureId: 0, pruning: true,
+            optimized: optimized)
+        let (bestScore2, bestMove2, bestBuild2) = context.minimax(board: context.getBoard(), playerId: playerId, maxDepth: maxDepth, currentDepth: 0, figureId: 1, pruning: true,
+            optimized: optimized)
         
         var newState:MoveState
         var figure:Field
+        
         if(bestScore1 > bestScore2) {
             figure = context.getBoard().getGamePiece(playerId: playerId, figureId: 0)
             newState = MoveState(playerId: self.playerId, figureRow: figure.getRow(), figureCollumn: figure.getCollumn())
@@ -47,7 +51,7 @@ class ChooseFigureState: GameState {
         
         if(context.toDelay()) {
             context.selectFigure(playerId: self.playerId, row: figure.getRow(), collumn: figure.getCollumn())
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: {
                 context.setGameState(newState: newState)
             })
         } else {

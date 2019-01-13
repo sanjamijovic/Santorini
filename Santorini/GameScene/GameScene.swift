@@ -160,13 +160,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             if(type == GameViewController.GameType.AIGame && !iteration!) {
-                print(board.toString())
                 grid!.present(board: board)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
                     self.gameOver(winnerId: self.board.getWinner()!)
                 })
             } else {
-                gameOver(winnerId: board.getWinner()!)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    self.gameOver(winnerId: self.board.getWinner()!)
+                })
             }
         } else if((type == GameViewController.GameType.onePlayer && board.getCurrentPlayer() == 1) ||
             type == GameViewController.GameType.AIGame) {
@@ -239,56 +240,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         grid?.putBlocks(row: row, collumn: collumn, level: numOfBlocks - 1)
     }
     
-    func minimax(board:Board, playerId:Int, maxDepth:Int, currentDepth:Int, figureId:Int, move:Field? = nil, build:Field? = nil) -> (bestScore:Int, bestMove:Field, bestBuild:Field) {
+    func minimax(board:Board, playerId:Int, maxDepth:Int, currentDepth:Int, figureId:Int, previousMove:Field? = nil, previousBuild:Field? = nil, alpha:Int = Int.min, beta:Int = Int.max, pruning:Bool, optimized: Bool) -> (bestScore:Int, bestMove:Field, bestBuild:Field) {
         if(board.gameOver() || currentDepth == maxDepth) {
-            return (bestScore: board.evaluate(move: move!, build: build!, playerId: playerId), bestMove: move!, bestBuild:build!)
-        }
-        var bestMove:Field = Field()
-        var bestBuild:Field = Field()
-        var bestScore:Int
-        bestScore = (board.getCurrentPlayer() == playerId ? Int.min : Int.max)
-        
-        for move in board.possibleMovesForCurrentPlayer(figureId: figureId, build: false) {
-            let newBoard = Board(board: board) // make copy
-            var currentScore:Int
-            newBoard.moveFigure(figureId: figureId, position: move)
-            
-            for build in newBoard.possibleMovesForCurrentPlayer(figureId: figureId, build: true) {
-                let newNewBoard = Board(board: newBoard)
-                newNewBoard.addBlock(row: build.getRow(), collumn: build.getCollumn())
-                newNewBoard.changeCurrentPlayer()
-                
-                let (score1, _, _) = minimax(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 0, move: move, build: build)
-                let (score2, _, _) = minimax(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 1, move: move, build: build)
-                
-                if(board.getCurrentPlayer() == playerId) {
-                    currentScore = max(score1, score2)
-                } else {
-                    currentScore = min(score1, score2)
-                }
-                
-                if (board.getCurrentPlayer() == playerId) { // MAX PLAYER
-                    if (currentScore > bestScore) {
-                        bestScore = currentScore
-                        bestMove = move
-                        bestBuild = build
-                    }
-                } else {                                    // MIN PLAYER
-                    if (currentScore < bestScore) {
-                        bestScore = currentScore
-                        bestMove = move
-                        bestBuild = build
-                    }
-                }
+            var score:Int;
+            if(optimized) {
+                score = board.evaluate(move: previousMove!, build: previousBuild!, playerId: playerId)
+            } else {
+                score = board.evaluate_old(move: previousMove!, build: previousBuild!, playerId: playerId)
             }
-        }
-        
-        return (bestScore, bestMove, bestBuild)
-    }
-    
-    func minimaxAlphaBeta(board:Board, playerId:Int, maxDepth:Int, currentDepth:Int, figureId:Int, previousMove:Field? = nil, previousBuild:Field? = nil, alpha:Int = Int.min, beta:Int = Int.max) -> (bestScore:Int, bestMove:Field, bestBuild:Field) {
-        if(board.gameOver() || currentDepth == maxDepth) {
-            return (bestScore: board.evaluate(move: previousMove!, build: previousBuild!, playerId: playerId), bestMove: previousMove!, bestBuild:previousBuild!)
+            return (bestScore: score, bestMove: previousMove!, bestBuild:previousBuild!)
         }
         var bestMove:Field = Field()
         var bestBuild:Field = Field()
@@ -297,20 +257,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         var alphaToPass:Int = alpha
         var betaToPass:Int = beta
         
-        for move in board.possibleMovesForCurrentPlayer(figureId: figureId, build: false) {
+        let possibleMoves = board.possibleMovesForCurrentPlayer(figureId: figureId, build: false)
+        
+        for move in  possibleMoves {
             let newBoard = Board(board: board) // make copy
             var currentScore:Int
             newBoard.moveFigure(figureId: figureId, position: move)
             let moveToPass = newBoard.getFieldState(row: move.getRow(), collumn: move.getCollumn())
             
-            for build in newBoard.possibleMovesForCurrentPlayer(figureId: figureId, build: true) {
+            let possibleBuilds = newBoard.possibleMovesForCurrentPlayer(figureId: figureId, build: true)
+            
+            for build in  possibleBuilds {
                 let newNewBoard = Board(board: newBoard)
                 newNewBoard.addBlock(row: build.getRow(), collumn: build.getCollumn())
                 newNewBoard.changeCurrentPlayer()
                 let buildToPass = newNewBoard.getFieldState(row: build.getRow(), collumn: build.getCollumn())
                 
-                let (score1, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 0, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass)
-                let (score2, _, _) = minimaxAlphaBeta(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 1, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass)
+                let (score1, _, _) = minimax(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 0, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass, pruning: pruning, optimized: optimized)
+                let (score2, _, _) = minimax(board: newNewBoard, playerId: playerId, maxDepth: maxDepth, currentDepth: currentDepth + 1, figureId: 1, previousMove: moveToPass, previousBuild: buildToPass, alpha: alphaToPass, beta:betaToPass, pruning: pruning, optimized: optimized)
                 
                 if(board.getCurrentPlayer() == playerId) {
                     currentScore = max(score1, score2)
@@ -323,20 +287,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         bestScore = currentScore
                         bestMove = move
                         bestBuild = build
-                        if(bestScore >= beta) {
-                            return (bestScore, bestMove, bestBuild)
+                        if(pruning) {
+                            if(bestScore >= beta) {
+                                return (bestScore, bestMove, bestBuild)
+                            }
+                            alphaToPass = max(alpha, bestScore)
                         }
-                        alphaToPass = max(alpha, bestScore)
                     }
                 } else {                                    // MIN PLAYER
                     if (currentScore < bestScore) {
                         bestScore = currentScore
                         bestMove = move
                         bestBuild = build
-                        if(bestScore <= alpha) {
-                            return (bestScore, bestMove, bestBuild)
+                        if(pruning) {
+                            if(bestScore <= alpha) {
+                                return (bestScore, bestMove, bestBuild)
+                            }
+                            betaToPass = min(bestScore, beta)
                         }
-                        betaToPass = min(bestScore, beta)
                     }
                 }
             }

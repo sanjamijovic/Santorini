@@ -18,12 +18,17 @@ protocol GameDelegate {
 class GameViewController: UIViewController, GameDelegate {
     func present(title: String, message: String) {
         let gameOverAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        // Create OK button
+        
+        // OKAction - back to initial view
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
             self.view.window!.rootViewController?.dismiss(animated: false, completion: nil)
-            
         }
+        
+        //cancelAction - cancel the Alert
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default)
+        
         gameOverAlertController.addAction(OKAction)
+        gameOverAlertController.addAction(cancelAction)
         self.present(gameOverAlertController, animated:false, completion:nil)
     }
     

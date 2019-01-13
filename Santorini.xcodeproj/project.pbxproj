@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		979ACA55DB84A867F65C217C /* Pods_Santorini.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3F465AF350887254C6EF1D /* Pods_Santorini.framework */; };
 		EF0BAC1E21CA91DB001143D5 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = EF0BAC1D21CA91DB001143D5 /* GameScene.sks */; };
-		EF0E403C21E22C6800FDA3A6 /* output.txt in Resources */ = {isa = PBXBuildFile; fileRef = EFF8083921E185520084798D /* output.txt */; };
 		EF15400921DFA4E800359367 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF15400821DFA46700359367 /* Assets.xcassets */; };
 		EF3A8C8021DE316D00758FDE /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF3A8C7F21DE316D00758FDE /* Board.swift */; };
 		EF70E34B21D9916500BDDAD0 /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF70E34A21D9916500BDDAD0 /* GameState.swift */; };
@@ -57,7 +56,6 @@
 		EFF4F6F221DAA99A00F46B0D /* Field.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Field.swift; sourceTree = "<group>"; };
 		EFF4F6F421DAB0FB00F46B0D /* ChooseFigureState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseFigureState.swift; sourceTree = "<group>"; };
 		EFF4F6FE21DB940600F46B0D /* PositioningState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositioningState.swift; sourceTree = "<group>"; };
-		EFF8083921E185520084798D /* output.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = output.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +117,6 @@
 			isa = PBXGroup;
 			children = (
 				EF7C410721E022F2007756E8 /* input.txt */,
-				EFF8083921E185520084798D /* output.txt */,
 				EF86503B21C92AD0006F238F /* Info.plist */,
 				EF7C40FD21DFFE9C007756E8 /* FileParser */,
 				EFF4F6FD21DB935C00F46B0D /* Initial */,
@@ -236,7 +233,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF0E403C21E22C6800FDA3A6 /* output.txt in Resources */,
 				EF7C410921E0253A007756E8 /* input.txt in Resources */,
 				EF86503021C92ACE006F238F /* art.scnassets in Resources */,
 				EF0BAC1E21CA91DB001143D5 /* GameScene.sks in Resources */,

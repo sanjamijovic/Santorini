@@ -140,7 +140,6 @@ class Grid: SKSpriteNode {
         
         let rectNode = nodes(at: gridPosition(row: row, col: collumn)).first
         if(rectNode == nil || isPlayer(node: rectNode!)) {
-//            let rn = SKSpriteNode(color: color, size: CGSize(width: blockSize - 3, height: blockSize - 3))
             let  rn = SKSpriteNode(texture: SKTexture(imageNamed: fileNames[level]))
             rn.position = gridPosition(row: row, col: collumn)
             rn.setScale(0.25)
@@ -148,7 +147,6 @@ class Grid: SKSpriteNode {
             addChild(rn)
         } else {
             let n:SKSpriteNode = rectNode as! SKSpriteNode
-//            n.color = color
             n.texture = SKTexture(imageNamed: fileNames[level])
         }
     }

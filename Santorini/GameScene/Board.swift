@@ -77,7 +77,7 @@ class Board {
     }
     
     func gameOver() -> Bool {
-        var numCantMove = 0
+        var numCantMove = [0, 0]
         for i in 0..<numOfRows {
             for j in 0..<numOfCollumns {
                 if(stateMatrix[i][j].playerOn() && stateMatrix[i][j].numOfBlocks() == 3) {
@@ -86,8 +86,8 @@ class Board {
                 }
                 if(stateMatrix[i][j].playerOn()) {
                     if(!canMove(row: i, collumn: j)) {
-                        numCantMove += 1
-                        if(numCantMove == 2) {
+                        numCantMove[stateMatrix[i][j].getPlayer()] += 1
+                        if(numCantMove[stateMatrix[i][j].getPlayer()] == 2) {
                             winner = 1 - stateMatrix[i][j].getPlayer()
                             return true
                         }
@@ -191,7 +191,7 @@ class Board {
         let collumn = node.getCollumn()
         
         for i in max(0, row - 1)..<min(row + 2, 5) {
-            for j in max(0, collumn - 1)..<min(collumn + 2,5) {
+            for j in max(0, collumn - 1)..<min(collumn + 2, 5) {
                 if(i==row && j==collumn) {
                     continue
                 }
@@ -229,49 +229,36 @@ class Board {
     }
     
     func evaluate_old(move:Field, build:Field, playerId:Int) -> Int {
+        if(gameOver()) {
+            return (winner == playerId ? Int.max - 1 : Int.min + 1)
+        }
         let distance = self.distance(playerId: playerId, node: build) - self.distance(playerId: 1 - playerId, node: build)
         return move.numOfBlocks() + build.numOfBlocks() * distance
     }
     
-    func evaluate_try(move:Field, build:Field, playerId:Int) -> Int {
-        if(gameOver()) {
-            return (winner == playerId ? Int.max : Int.min)
-        }
-        let distance = self.distance(playerId: playerId, node: build) - self.distance(playerId: 1 - playerId, node: build)
-        let c1 = (playerId == move.getPlayer() ? 1 : -1)
-        
-        let movesAtBuildField = getPossibleMoves(node: build, build: false)
-        let movesAtMoveFied = getPossibleMoves(node: move, build: false)
-        var sumOfBlocksBuild = 0
-        var sumOfBlocksMove = 0
-        for m1 in movesAtBuildField {
-            sumOfBlocksBuild += m1.numOfBlocks()
-        }
-        for m2 in movesAtMoveFied {
-            sumOfBlocksMove += m2.numOfBlocks()
-        }
-        let movesCountMove = (movesAtMoveFied.count == 0 ? 1 : movesAtMoveFied.count)
-        let movesCountBuild = (movesAtBuildField.count == 0 ? 1 : movesAtBuildField.count)
-        
-        return move.numOfBlocks() * c1 * sumOfBlocksMove - c1 * distance * build.numOfBlocks()
-        
-    }
-    
     func evaluate(move:Field, build:Field, playerId:Int) -> Int {
         if(gameOver()) {
-            return (winner == playerId ? Int.max : Int.min)
+            return (winner == playerId ? Int.max - 1 : Int.min + 1)
         }
+        let distance = self.distance(playerId: playerId, node: build) - self.distance(playerId: 1 - playerId, node: build)
+        
         let maxFigure0 = getGamePiece(playerId: playerId, figureId: 0)
         let maxFigure1 = getGamePiece(playerId: playerId, figureId: 1)
         
+        let maxCount = getPossibleMoves(node: getGamePiece(playerId: playerId, figureId: 0), build: false).count +
+                       getPossibleMoves(node: getGamePiece(playerId: playerId, figureId: 1), build: false).count
+        
+        let maxFigureMax = max(maxFigure0.numOfBlocks(), maxFigure1.numOfBlocks())
+   
+
         let minFigure0 = getGamePiece(playerId: 1 - playerId, figureId: 0)
         let minFigure1 = getGamePiece(playerId: 1 - playerId, figureId: 1)
         
-        let c1 = (playerId == move.getPlayer() ? 1 : -1)
+        let minFigureMax = max(minFigure0.numOfBlocks(), minFigure1.numOfBlocks())
         
-        let distance = self.distance(playerId: 1 - playerId, node: build) - self.distance(playerId: playerId, node: build)
-        return c1 * move.numOfBlocks() + c1 * build.numOfBlocks() * distance + 4 * (maxFigure0.numOfBlocks() + maxFigure1.numOfBlocks())
-            - 2 * (minFigure0.numOfBlocks() + minFigure1.numOfBlocks())
+        let minCount = getPossibleMoves(node: getGamePiece(playerId: 1 - playerId, figureId: 0), build: false).count +
+                       getPossibleMoves(node: getGamePiece(playerId: 1 - playerId, figureId: 1), build: false).count
+        
+        return move.numOfBlocks() * (maxCount - minCount) + 4 * (maxFigureMax - minFigureMax) + build.numOfBlocks() * distance
     }
-    
 }
